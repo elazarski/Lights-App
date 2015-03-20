@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LightsApp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="play_setlist">Play Setlist</string>
+    <string name="play_song">Play Song</string>
+    <string name="learn_setlist">Learn Setlist</string>
+    <string name="learn_song">Learn Song</string>
+    <string name="delete_setlist">Delete Setlist</string>
+    <string name="delete_song">Delete Song</string>
+    <string name="title_activity_get_ip">getIp</string>
+    <string name="accept">Accept</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="ip_hint">Enter IP Address of host machine</string>
+</resources>
