@@ -12,14 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 
 public class SecondActivity extends ActionBarActivity implements GotIp {
 
@@ -86,35 +78,8 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
         }
     }
 
-    private static String Connect(String ipAddr) {//} throws ConnectException {
+    private static void Connect(String ipAddr) {//} throws ConnectException {
 
-        try {
-            URL u = new URL("http://" + ipAddr);
-
-            HttpURLConnection co = (HttpURLConnection)u.openConnection();
-            co.setRequestMethod("GET");
-            co.setDoOutput(false);
-            co.setDoInput(true);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(co.getInputStream()));
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-
-            reader.close();
-            co.disconnect();
-            return line;
-
-
-        } catch (MalformedURLException e) {
-           // throw new ConnectException();
-        } catch (ConnectException e) {
-            //throw e;
-        } catch (IOException e) {
-            //throw new ConnectException();
-        }
-
-        return "a";
+        new RetrieveEvent().execute(ipAddr);
     }
 }
