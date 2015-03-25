@@ -59,7 +59,8 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
     @Override
     public void cont(String ipAddr) {
         // connect to specified IP Address
-        Connect(ipAddr);
+        RetrieveEvent retrieveEvent = new RetrieveEvent();
+        retrieveEvent.execute(ipAddr);
     }
 
     /**
@@ -76,10 +77,5 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
             View rootView = inflater.inflate(R.layout.fragment_second, container, false);
             return rootView;
         }
-    }
-
-    private static void Connect(String ipAddr) {//} throws ConnectException {
-
-        new RetrieveEvent().execute(ipAddr);
     }
 }

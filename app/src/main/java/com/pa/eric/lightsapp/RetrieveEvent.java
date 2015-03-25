@@ -13,9 +13,15 @@ import java.net.URL;
 /**
  * Created by swlazarser on 3/24/15.
  */
-public class RetrieveEvent extends AsyncTask<String, Void, String> {
+public class RetrieveEvent extends AsyncTask<String, Void, Void> {
+    private String ipAddr;
+
+    public void setIp(String ipAddress) {
+        ipAddr = ipAddress;
+    }
+
     @Override
-    protected String doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
         try {
             URL u = new URL("http://" + params[0]);
 
@@ -43,6 +49,6 @@ public class RetrieveEvent extends AsyncTask<String, Void, String> {
             //throw new ConnectException();
         }
 
-        return "a";
+        return null;
     }
 }

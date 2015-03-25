@@ -53,6 +53,7 @@ public class IpFragment extends Fragment {
     private class AcceptListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            ipAddr = ipEditText.getText().toString();
             i.cont(ipAddr);
         }
     }
