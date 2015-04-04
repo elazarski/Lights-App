@@ -17,6 +17,7 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
 
     IpFragment ipFragment;
     int reason;
+  //  static public final int SENT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,6 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
         fragmentTransaction.add(R.id.container, ipFragment, "fragment_second");
         fragmentTransaction.commit();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
