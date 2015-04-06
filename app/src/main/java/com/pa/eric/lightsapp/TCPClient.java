@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Handler;
 
+
 /**
  * Created by eric on 4/4/15.
  */
@@ -73,7 +74,7 @@ public class TCPClient {
                 Log.d(TAG, "In/Out created");
 
                 while (mRun) {
-                    char[] buffer = new char[64];
+                    char[] buffer = new char[128];
                     in.read(buffer);
                     Log.d(TAG, "Recieved message: " + buffer);
                 }
@@ -98,4 +99,8 @@ public class TCPClient {
     public interface MessageCallback {
         public void callbackMessageReciever(String message);
     }
+
+    public native void a();
+
+
 }
