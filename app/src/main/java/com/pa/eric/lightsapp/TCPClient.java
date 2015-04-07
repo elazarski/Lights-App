@@ -11,12 +11,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Handler;
 
-
 /**
  * Created by eric on 4/4/15.
  */
 
-// code from: https://github.com/codepath/android_guides/wiki/Sending-and-Receiving-Data-with-Sockets
+// original code modified from: https://github.com/codepath/android_guides/wiki/Sending-and-Receiving-Data-with-Sockets
 public class TCPClient {
     private static final String TAG = "TCPClient";
     private final Handler mHandler;
@@ -37,6 +36,7 @@ public class TCPClient {
         this.listener = listener;
         this.ipNumber = ipNumber;
         this.mHandler = mHandler;
+
     }
 
     // send message
@@ -74,7 +74,7 @@ public class TCPClient {
                 Log.d(TAG, "In/Out created");
 
                 while (mRun) {
-                    char[] buffer = new char[128];
+                    char[] buffer = new char[32];
                     in.read(buffer);
                     Log.d(TAG, "Recieved message: " + buffer);
                 }
