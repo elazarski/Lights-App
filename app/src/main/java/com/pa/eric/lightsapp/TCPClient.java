@@ -56,6 +56,10 @@ public class TCPClient {
         mRun = false;
     }
 
+    static {
+        System.loadLibrary("asound");
+    }
+
     // running client. listenes for messages
     public void run() {
         mRun = true;
