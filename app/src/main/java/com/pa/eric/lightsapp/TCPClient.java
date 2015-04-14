@@ -2,6 +2,8 @@ package com.pa.eric.lightsapp;
 
 import android.util.Log;
 
+import org.tritonus.lowlevel.alsa.AlsaSeqEvent;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -74,9 +76,11 @@ public class TCPClient {
                 Log.d(TAG, "In/Out created");
 
                 while (mRun) {
+                    AlsaSeqEvent event = new AlsaSeqEvent();
                     char[] buffer = new char[32];
                     in.read(buffer);
                     Log.d(TAG, "Recieved message: " + buffer);
+
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error", e);
