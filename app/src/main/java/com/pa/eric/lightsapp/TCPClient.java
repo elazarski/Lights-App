@@ -2,8 +2,6 @@ package com.pa.eric.lightsapp;
 
 import android.util.Log;
 
-import org.tritonus.lowlevel.alsa.AlsaSeqEvent;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -41,6 +39,12 @@ public class TCPClient {
 
     }
 
+    static {
+        System.loadLibrary("ALSA_Java");
+    }
+
+    public native int[] ConvertBytesToArray(byte[] bytes);
+
     // send message
     public void sendMessage(String message) {
         if (out != null && !out.checkError()) {
@@ -56,11 +60,7 @@ public class TCPClient {
         mRun = false;
     }
 
-    static {
-        System.loadLibrary("asound");
-    }
-
-    // running client. listenes for messages
+    // running client. listens for messages
     public void run() {
         mRun = true;
 
@@ -80,11 +80,12 @@ public class TCPClient {
                 Log.d(TAG, "In/Out created");
 
                 while (mRun) {
-                    AlsaSeqEvent event = new AlsaSeqEvent();
+
                     char[] buffer = new char[32];
                     in.read(buffer);
                     Log.d(TAG, "Recieved message: " + buffer);
-
+                    byte[] readBytes = new String(buffer).getBytes();
+                    int[] returned = ConvertBytesToArray(readBytes);
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error", e);
