@@ -2,9 +2,8 @@ package com.pa.eric.lightsapp;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -20,10 +19,14 @@ public class TCPClient {
     private static final String TAG = "TCPClient";
     private final Handler mHandler;
     private String ipNumber, incomingMessage;
-    BufferedReader in;
+    BufferedInputStream in;
     PrintWriter out;
     private MessageCallback listener = null;
     private boolean mRun = false;
+
+    static {
+        System.loadLibrary("ALSA_Java");
+    }
 
     /**
      * TCPClient class constructor, which is created in AsyncTasks after the button click.
@@ -36,14 +39,9 @@ public class TCPClient {
         this.listener = listener;
         this.ipNumber = ipNumber;
         this.mHandler = mHandler;
-
     }
 
-    static {
-        System.loadLibrary("ALSA_Java");
-    }
-
-    public native int[] ConvertBytesToArray(byte[] bytes);
+    public native char[] ConvertBytesToArray(byte[] bytes);
 
     // send message
     public void sendMessage(String message) {
@@ -75,17 +73,19 @@ public class TCPClient {
                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 
                 // create buffered reader to read from server
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                in = new BufferedInputStream(socket.getInputStream());
 
                 Log.d(TAG, "In/Out created");
 
                 while (mRun) {
 
-                    char[] buffer = new char[32];
+                    byte[] buffer = new byte[32];
                     in.read(buffer);
-                    Log.d(TAG, "Recieved message: " + buffer);
-                    byte[] readBytes = new String(buffer).getBytes();
-                    int[] returned = ConvertBytesToArray(readBytes);
+
+                    Log.d(TAG, "Recieved message");
+                    //byte[] readBytes = new String(buffer).getBytes();
+                    char[] returned = ConvertBytesToArray(buffer);
+                    //if (returned == null) System.out.println("Returned null");
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error", e);
