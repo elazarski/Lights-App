@@ -5,7 +5,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesToArray(JNIEnv *env, jbyteArray *bytes);
+JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesToArray(JNIEnv *env, jobject obj, jbyteArray bytes);
 #ifdef __cplusplus
 }
 #endif

@@ -85,7 +85,8 @@ public class TCPClient {
                     Log.d(TAG, "Recieved message");
                     //byte[] readBytes = new String(buffer).getBytes();
                     char[] returned = ConvertBytesToArray(buffer);
-                    //if (returned == null) System.out.println("Returned null");
+                    if (returned == null) { System.out.println("Returned null"); }
+                    else { System.out.println("Type: " + (int)returned[0] + " Channel: " + (int)returned[1] + " Num: " + (int)returned[2]); }
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error", e);

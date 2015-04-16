@@ -7,7 +7,7 @@
 
 using namespace std;
 
-JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesToArray(JNIEnv *env, jbyteArray *bytes) {
+JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesToArray(JNIEnv *env, jobject obj, jbyteArray bytes) {
 	snd_seq_event_t *ev;
 	jbyte *data;
 	jchar fill[3];
@@ -22,7 +22,7 @@ JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesTo
 
    // env->GetByteArrayRegion(*bytes, 0, len, buffer);
 
-	data = env->GetByteArrayElements(*bytes, NULL);
+	data = env->GetByteArrayElements(bytes, NULL);
 	//if (data == NULL) return NULL;
 
 //    memcpy(buffer, data, len);
@@ -35,7 +35,7 @@ JNIEXPORT jcharArray JNICALL Java_com_pa_eric_lightsapp_TCPClient_ConvertBytesTo
 	fill[1] = (jchar)ev->data.control.channel;
 	fill[2] = (jchar)ev->data.note.note;
 
-     env->ReleaseByteArrayElements(*bytes, data, JNI_ABORT);
+     env->ReleaseByteArrayElements(bytes, data, JNI_ABORT);
 
     //free(buffer);
 
