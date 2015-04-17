@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class SecondActivity extends ActionBarActivity implements GotIp {
+public class SecondActivity extends ActionBarActivity implements GotIp,SongFragment.OnFragmentInteractionListener {
 
     IpFragment ipFragment;
     int reason;
@@ -56,11 +56,24 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    // continues after getting the IP/Hostname of server based upon the reason this Activity was launched
     public void cont(String ipAddr) {
         // connect to specified IP Address
-        RetrieveEvent retrieveEvent = new RetrieveEvent();
-        retrieveEvent.execute(ipAddr);
+        if (reason == 0 || reason == 1) { // playing setlist or song
+            RetrieveEvent retrieveEvent = new RetrieveEvent(getApplicationContext());
+            retrieveEvent.execute(ipAddr);
+        } else { // learning setlist or song
+            SongFragment songFragment = SongFragment.newInstance(new Integer(reason).toString(), ipAddr);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container, songFragment, "fragment_song_list");
+            fragmentTransaction.commit();
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(String id) {
+
     }
 
     /**
@@ -78,4 +91,6 @@ public class SecondActivity extends ActionBarActivity implements GotIp {
             return rootView;
         }
     }
+
+
 }

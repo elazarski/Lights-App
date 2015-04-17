@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -36,6 +38,12 @@ public class MainActivity extends ActionBarActivity {
         learnSong.setOnClickListener(new LearnSongListener());
         deleteSetlist.setOnClickListener(new DeleteSetlistListener());
         deleteSong.setOnClickListener(new DeleteSongListener());
+
+        // create directories if they do note exist
+        File f = new File("./songs");
+        f.mkdirs();
+        f = new File("./setlists");
+        f.mkdirs();
     }
 
     @Override
@@ -74,6 +82,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             // get song from user and play it
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            intent.putExtra("reason", 1);
+            startActivity(intent);
         }
     }
 
@@ -81,6 +92,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             // connect to host computer to get setlist data
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            intent.putExtra("reason", 2);
+            startActivity(intent);
         }
     }
 
@@ -88,6 +102,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             // connect to host computer to get song data
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            intent.putExtra("reason", 3);
+            startActivity(intent);
         }
     }
 

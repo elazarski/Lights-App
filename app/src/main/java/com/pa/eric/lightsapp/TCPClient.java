@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.logging.Handler;
 
 /**
  * Created by eric on 4/4/15.
@@ -17,7 +16,6 @@ import java.util.logging.Handler;
 // original code modified from: https://github.com/codepath/android_guides/wiki/Sending-and-Receiving-Data-with-Sockets
 public class TCPClient {
     private static final String TAG = "TCPClient";
-    private final Handler mHandler;
     private String ipNumber, incomingMessage;
     BufferedInputStream in;
     PrintWriter out;
@@ -30,15 +28,14 @@ public class TCPClient {
 
     /**
      * TCPClient class constructor, which is created in AsyncTasks after the button click.
-     * @param mHandler Handler passed as an argument for updating the UI with sent messages
+     *
      *
      * @param ipNumber String retrieved from IpGetter class that is looking for ip number.
      * @param listener Callback interface object
      */
-    public TCPClient(Handler mHandler, String ipNumber, MessageCallback listener) {
+    public TCPClient(String ipNumber, MessageCallback listener) {
         this.listener = listener;
         this.ipNumber = ipNumber;
-        this.mHandler = mHandler;
     }
 
     public native char[] ConvertBytesToArray(byte[] bytes);
@@ -85,8 +82,11 @@ public class TCPClient {
                     Log.d(TAG, "Recieved message");
                     //byte[] readBytes = new String(buffer).getBytes();
                     char[] returned = ConvertBytesToArray(buffer);
-                    if (returned == null) { System.out.println("Returned null"); }
-                    else { System.out.println("Type: " + (int)returned[0] + " Channel: " + (int)returned[1] + " Num: " + (int)returned[2]); }
+                    if (returned == null) { throw new Exception(); }
+                    else {
+                        listener.callbackMessageReciever(new MidiEvent(returned));
+                    }
+
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error", e);
@@ -107,10 +107,7 @@ public class TCPClient {
     }
 
     public interface MessageCallback {
-        public void callbackMessageReciever(String message);
+        public void callbackMessageReciever(MidiEvent event);
     }
-
-    public native void a();
-
 
 }

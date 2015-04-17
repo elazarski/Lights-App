@@ -13,4 +13,6 @@
     <string name="accept">Accept</string>
     <string name="title_activity_second">SecondActivity</string>
     <string name="ip_hint">Enter IP Address of host machine</string>
+    <string name="no_songs">No Songs</string>
+    <string name="song_name">Song Name</string>
 </resources>
