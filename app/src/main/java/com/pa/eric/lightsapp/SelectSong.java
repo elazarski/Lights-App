@@ -1,0 +1,96 @@
+package com.pa.eric.lightsapp;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SelectSong extends ListFragment {
+
+    private OnFragmentInteractionListener mListener;
+
+    List<String> fileList = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
+    ListView lv;
+
+    public SelectSong() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // populate fileList
+
+        // song directory
+        File f = new File(getActivity().getApplicationInfo().dataDir + "/songs/");
+        File[] files = f.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            fileList.add(files[i].toString().substring(0, files[i].toString().length() - 4)); // remove '.xml' so it looks nice
+            System.out.println(files[i].toString());
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_select_song, container, false);
+        return v;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
+        adapter = new ArrayAdapter<String>(getView().getContext(), R.layout.row, fileList);
+        setListAdapter(adapter);
+
+        lv = (ListView)getListView();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String pathToFile = getActivity().getApplicationInfo().dataDir + (String)lv.getItemAtPosition(position) + ".xml";
+                mListener.onFragmentInteraction(pathToFile);
+            }
+        });
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        public void onFragmentInteraction(String file);
+    }
+
+}

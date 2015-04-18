@@ -40,9 +40,10 @@ public class MainActivity extends ActionBarActivity {
         deleteSong.setOnClickListener(new DeleteSongListener());
 
         // create directories if they do note exist
-        File f = new File("./songs");
+        String dir = getApplicationInfo().dataDir;
+        File f = new File(dir + "/songs");
         f.mkdirs();
-        f = new File("./setlists");
+        f = new File(dir + "/setlists");
         f.mkdirs();
     }
 

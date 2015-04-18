@@ -1,6 +1,7 @@
 package com.pa.eric.lightsapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,11 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class SecondActivity extends ActionBarActivity implements GotIp,SongFragment.OnFragmentInteractionListener {
+public class SecondActivity extends ActionBarActivity implements GotIp,DownloadFragment.OnFragmentInteractionListener,SelectSong.OnFragmentInteractionListener {
 
     IpFragment ipFragment;
+    DownloadFragment downloadFragment;
+    SelectSong selectSong;
     int reason;
-  //  static public final int SENT = 1;
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +33,8 @@ public class SecondActivity extends ActionBarActivity implements GotIp,SongFragm
         reason = sender.getIntExtra("reason", 0);
 
         ipFragment = new IpFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.container, ipFragment, "fragment_second");
+
+        fragmentTransaction.add(R.id.container, ipFragment, "ip_fragment");
         fragmentTransaction.commit();
     }
 
@@ -60,19 +64,36 @@ public class SecondActivity extends ActionBarActivity implements GotIp,SongFragm
     public void cont(String ipAddr) {
         // connect to specified IP Address
         if (reason == 0 || reason == 1) { // playing setlist or song
+
+            // starts listening for events
             RetrieveEvent retrieveEvent = new RetrieveEvent(getApplicationContext());
             retrieveEvent.execute(ipAddr);
+
+            if (reason == 0) { // setlist
+
+            } else { // must select single file to load
+                selectSong = new SelectSong();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, selectSong, "select_song");
+                fragmentTransaction.remove(ipFragment);
+                fragmentTransaction.commit();
+            }
         } else { // learning setlist or song
-            SongFragment songFragment = SongFragment.newInstance(new Integer(reason).toString(), ipAddr);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.container, songFragment, "fragment_song_list");
+            downloadFragment = DownloadFragment.newInstance(ipAddr, reason);
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container, downloadFragment, "download_fragment");
+            fragmentTransaction.remove(ipFragment);
             fragmentTransaction.commit();
         }
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(String file) {
 
     }
 

@@ -13,6 +13,9 @@
     <string name="accept">Accept</string>
     <string name="title_activity_second">SecondActivity</string>
     <string name="ip_hint">Enter IP Address of host machine</string>
-    <string name="no_songs">No Songs</string>
+    <string name="no_files">No Files</string>
     <string name="song_name">Song Name</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
