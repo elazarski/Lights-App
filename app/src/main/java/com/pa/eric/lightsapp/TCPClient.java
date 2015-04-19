@@ -89,7 +89,7 @@ public class TCPClient {
 
                 }
             } catch (Exception e) {
-                Log.d(TAG, "Error", e);
+                Log.e("ERROR: ", e.toString());
             } finally {
                 out.flush();
                 out.close();

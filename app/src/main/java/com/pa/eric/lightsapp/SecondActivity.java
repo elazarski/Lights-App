@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class SecondActivity extends ActionBarActivity implements GotIp,DownloadFragment.OnFragmentInteractionListener,SelectSong.OnFragmentInteractionListener {
+public class SecondActivity extends ActionBarActivity implements GotIp,DownloadFragment.OnFragmentInteractionListener,SelectSong.OnFragmentInteractionListener,PlaySong.OnFragmentInteractionListener {
 
     IpFragment ipFragment;
     DownloadFragment downloadFragment;
@@ -87,13 +87,25 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
         }
     }
 
+    // not used
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
 
+    // method to change view to PlaySong
     @Override
     public void onFragmentInteraction(String file) {
+        PlaySong playSong = PlaySong.newInstance(file);
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.container, playSong, "play_song");
+        fragmentTransaction.remove(selectSong);
+        fragmentTransaction.commit();
+    }
+
+    // called when song is done
+    @Override
+    public void onFragmentInteraction() {
 
     }
 

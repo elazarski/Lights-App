@@ -29,16 +29,6 @@ public class SelectSong extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // populate fileList
-
-        // song directory
-        File f = new File(getActivity().getApplicationInfo().dataDir + "/songs/");
-        File[] files = f.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            fileList.add(files[i].toString().substring(0, files[i].toString().length() - 4)); // remove '.xml' so it looks nice
-            System.out.println(files[i].toString());
-        }
     }
 
     @Override
@@ -59,14 +49,29 @@ public class SelectSong extends ListFragment {
                     + " must implement OnFragmentInteractionListener");
         }
 
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // populate fileList
+        // song directory
+        File f = new File(getActivity().getApplicationInfo().dataDir + "/songs/");
+        File[] files = f.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            fileList.add(files[i].toString().substring(files[i].toString().lastIndexOf('/') + 1, files[i].toString().length() - 4)); // remove path and '.xml' so it looks nice
+        }
+
         adapter = new ArrayAdapter<String>(getView().getContext(), R.layout.row, fileList);
         setListAdapter(adapter);
 
-        lv = (ListView)getListView();
+        lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String pathToFile = getActivity().getApplicationInfo().dataDir + (String)lv.getItemAtPosition(position) + ".xml";
+                String pathToFile = getActivity().getApplicationInfo().dataDir + "/songs/" + (String)lv.getItemAtPosition(position) + ".xml";
                 mListener.onFragmentInteraction(pathToFile);
             }
         });

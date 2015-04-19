@@ -232,7 +232,7 @@ public class DownloadFragment extends ListFragment {
                 // download file
                 InputStream input = new BufferedInputStream(url.openStream());
 
-                OutputStream output = new FileOutputStream(filePath + fileName, true);
+                OutputStream output = new FileOutputStream(filePath + fileName, false);
 
                 byte data[] = new byte[1024];
 
