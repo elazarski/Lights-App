@@ -84,7 +84,10 @@ public class TCPClient {
                     char[] returned = ConvertBytesToArray(buffer);
                     if (returned == null) { throw new Exception(); }
                     else {
-                        listener.callbackMessageReciever(new MidiEvent(returned));
+                        MidiEvent event = new MidiEvent(returned);
+                        if (event.getType() == 6) {
+                            listener.callbackMessageReciever(event);
+                        }
                     }
 
                 }

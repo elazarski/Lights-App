@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 /**
@@ -36,15 +37,17 @@ public class PlaySong extends Fragment {
 
     private String filePath;
 
-    Song song;
+    static Song song;
 
     private OnFragmentInteractionListener mListener;
 
     TextView songName;
     TextView bpm;
     TextView mood;
-    TextView cueList;
+    static TextView cueList;
     Button nextCue;
+
+    public static Queue<MidiEvent> queue = new LinkedList<MidiEvent>();
 
 
     /**
@@ -142,6 +145,7 @@ public class PlaySong extends Fragment {
         mood.setText(song.getMood());
 
         cueList.setText(song.getFirstCue().toString());
+        cueList.append("\n------------------------------------\n");
     }
 
     @Override
@@ -175,8 +179,11 @@ public class PlaySong extends Fragment {
         public void onFragmentInteraction();
     }
 
-    public static void ParseEvent(MidiEvent event, Context context) {
-        Toast t = Toast.makeText(context, event.toString(), Toast.LENGTH_SHORT);
-        t.show();
+    public static void ParseEvent(Context context) {
+        MidiEvent event = queue.poll();
+
+        Cue cue = song.findCue(event.getNum());
+        cueList.append(cue.toString());
+        cueList.append("\n----------------------------\n");
     }
 }

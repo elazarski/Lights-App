@@ -139,7 +139,7 @@ public class DownloadFragment extends ListFragment {
             String line = strings.get(i);
             // extract required part of string and add to songList
             int beginIndex = line.indexOf("f=") + 3;
-            int endIndex = line.indexOf("\">", line.indexOf("></td>")) - 4;
+            int endIndex = line.indexOf(".xml");
 
             songList.add(line.substring(beginIndex, endIndex));
         }
@@ -189,7 +189,7 @@ public class DownloadFragment extends ListFragment {
                 while (line != null) {
 
                     // check if current line is needed
-                    if (line.contains("<tr><td") && !(line.contains("[PARENTDIR]"))) requiredLines.add(line);
+                    if (line.contains("[TXT]")) requiredLines.add(line);
 
                     line = bufferedReader.readLine();
                 }
@@ -200,9 +200,8 @@ public class DownloadFragment extends ListFragment {
                 return requiredLines;
             } catch (Exception e) {
                 Log.e("ERROR: ", e.toString());
+                return null;
             }
-
-            return null;
         }
 
         @Override

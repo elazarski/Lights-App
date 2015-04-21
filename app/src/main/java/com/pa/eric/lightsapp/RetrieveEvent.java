@@ -44,8 +44,8 @@ public class RetrieveEvent extends AsyncTask<String, MidiEvent, TCPClient> {
     // update UI
     @Override
     protected void onProgressUpdate(MidiEvent... values) {
-        MidiEvent event = values[0];
-        PlaySong.ParseEvent(event, context);
+        PlaySong.queue.offer(values[0]);
+        PlaySong.ParseEvent(context);
     }
 
     @Override
