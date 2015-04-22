@@ -57,7 +57,7 @@
             android:layout_weight="0.99"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:nestedScrollingEnabled="true" />
+            android:scrollbars="horizontal" />
 
         <Button
             android:layout_width="wrap_content"

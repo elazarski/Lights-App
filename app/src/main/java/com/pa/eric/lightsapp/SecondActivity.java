@@ -23,6 +23,8 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+    RetrieveEvent retrieveEvent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
         if (reason == 0 || reason == 1) { // playing setlist or song
 
             // starts listening for events
-            RetrieveEvent retrieveEvent = new RetrieveEvent(getApplicationContext());
+            retrieveEvent = new RetrieveEvent(getApplicationContext());
             retrieveEvent.execute(ipAddr);
 
             if (reason == 0) { // setlist
@@ -106,7 +108,12 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     // called when song is done
     @Override
     public void onFragmentInteraction() {
+        if (reason == 0) {
 
+        } else {
+            retrieveEvent.cancel(true);
+            finish();
+        }
     }
 
     /**

@@ -46,4 +46,5 @@ public class Song {
     public Cue getFinalCue() {
         return cues.get(cues.size() - 1);
     }
+
 }

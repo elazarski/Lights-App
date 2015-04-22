@@ -67,7 +67,7 @@ public class TCPClient {
             Socket socket = new Socket(serverAddress, 40002);
             try {
                 // create PrintWriter to write to server
-                out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), false);
 
                 // create buffered reader to read from server
                 in = new BufferedInputStream(socket.getInputStream());

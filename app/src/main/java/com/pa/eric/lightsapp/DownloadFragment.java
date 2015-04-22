@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -189,7 +190,7 @@ public class DownloadFragment extends ListFragment {
                 while (line != null) {
 
                     // check if current line is needed
-                    if (line.contains("[TXT]")) requiredLines.add(line);
+                    if (line.contains("<tr><td") && !(line.contains("[PARENTDIR]"))) requiredLines.add(line);
 
                     line = bufferedReader.readLine();
                 }
@@ -224,6 +225,7 @@ public class DownloadFragment extends ListFragment {
             // code found at: http://stackoverflow.com/questions/15758856/android-how-to-download-file-from-webserver
 
             try {
+
                 URL url = new URL(params[0]);
                 URLConnection connection = url.openConnection();
                 connection.connect();
@@ -231,25 +233,37 @@ public class DownloadFragment extends ListFragment {
                 // download file
                 InputStream input = new BufferedInputStream(url.openStream());
 
-                OutputStream output = new FileOutputStream(filePath + fileName, false);
+                // delete file if exists
+                File f = new File(filePath + fileName);
+                if (f.exists()) f.delete();
+                OutputStream output = new FileOutputStream(filePath + fileName, true);
 
                 byte data[] = new byte[1024];
 
                 while (input.read(data) != -1) {
                     output.write(data);
+
+                    data = new byte[1024];
                 }
 
                 output.flush();
                 output.close();
                 input.close();
 
-                File f = new File(filePath + fileName);
+                f = new File(filePath + fileName);
+
+
                 return f;
 
             } catch (Exception e) {
                 Log.e("ERROR: ", e.toString());
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            Toast.makeText(getActivity().getApplicationContext(), "File Downloaded", Toast.LENGTH_SHORT).show();
         }
     }
 }

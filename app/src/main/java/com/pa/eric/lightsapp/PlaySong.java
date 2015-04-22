@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -37,17 +38,19 @@ public class PlaySong extends Fragment {
 
     private String filePath;
 
-    static Song song;
+    private static Song song;
 
-    private OnFragmentInteractionListener mListener;
+    private static OnFragmentInteractionListener mListener;
 
     TextView songName;
     TextView bpm;
     TextView mood;
-    static TextView cueList;
+    private static TextView cueList;
     Button nextCue;
 
     public static Queue<MidiEvent> queue = new LinkedList<MidiEvent>();
+
+    private static Cue finalCue;
 
 
     /**
@@ -121,6 +124,8 @@ public class PlaySong extends Fragment {
         } catch (Exception e) {
             Log.e("ERROR: ", e.toString());
         }
+
+        finalCue = song.getFinalCue();
     }
 
     @Override
@@ -145,7 +150,8 @@ public class PlaySong extends Fragment {
         mood.setText(song.getMood());
 
         cueList.setText(song.getFirstCue().toString());
-        cueList.append("\n------------------------------------\n");
+
+        cueList.setMovementMethod(new ScrollingMovementMethod());
     }
 
     @Override
@@ -183,7 +189,20 @@ public class PlaySong extends Fragment {
         MidiEvent event = queue.poll();
 
         Cue cue = song.findCue(event.getNum());
-        cueList.append(cue.toString());
-        cueList.append("\n----------------------------\n");
+
+        if (cue.getNum() == finalCue.getNum()) {
+            mListener.onFragmentInteraction();
+        } else {
+
+            cueList.setText(cue.toString());
+
+            // code found at: http://stackoverflow.com/questions/3506696/auto-scrolling-textview-in-android-to-bring-text-into-view
+            int scrollAmount = cueList.getLayout().getLineTop(cueList.getLineCount()) - cueList.getHeight();
+
+            if (scrollAmount > 0)
+                cueList.scrollTo(0, scrollAmount);
+            else
+                cueList.scrollTo(0, 0);
+        }
     }
 }
