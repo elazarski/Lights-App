@@ -7,14 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 
-public class SecondActivity extends ActionBarActivity implements GotIp,DownloadFragment.OnFragmentInteractionListener,SelectSong.OnFragmentInteractionListener,PlaySong.OnFragmentInteractionListener {
+
+public class SecondActivity extends ActionBarActivity implements GotIp,DownloadFragment.OnFragmentInteractionListener,PlaySong.OnFragmentInteractionListener,SelectSong.OnFragmentInteractionListener,SelectSetlist.OnFragmentInteractionListener {
 
     IpFragment ipFragment;
     DownloadFragment downloadFragment;
@@ -22,8 +27,14 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     int reason;
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    SelectSetlist selectSetlist;
 
     RetrieveEvent retrieveEvent;
+
+    PlaySong playSong;
+
+    ArrayList<String> songs;
+    int songIndex = 0;
 
 
     @Override
@@ -38,6 +49,8 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
 
         fragmentTransaction.add(R.id.container, ipFragment, "ip_fragment");
         fragmentTransaction.commit();
+
+        songs = new ArrayList<>();
     }
 
     @Override
@@ -72,7 +85,11 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
             retrieveEvent.execute(ipAddr);
 
             if (reason == 0) { // setlist
-
+                selectSetlist = new SelectSetlist();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, selectSetlist, "select_setlist");
+                fragmentTransaction.remove(ipFragment);
+                fragmentTransaction.commit();
             } else { // must select single file to load
                 selectSong = new SelectSong();
                 fragmentTransaction = fragmentManager.beginTransaction();
@@ -95,13 +112,44 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
 
     }
 
-    // method to change view to PlaySong
+    // method to change view to PlaySong for the first song, works for setlists and songs
     @Override
     public void onFragmentInteraction(String file) {
-        PlaySong playSong = PlaySong.newInstance(file);
+        if (reason == 0) { //playing setlist
+
+            String songDir = getApplicationInfo().dataDir + "/songs/";
+
+            // get songs from setlist
+            ArrayList<String> files = new ArrayList<>();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    files.add(line);
+                }
+            } catch (Exception e) {
+                Log.e("ERROR: ", e.toString());
+            }
+
+            for (int i = 0; i < files.size(); i++) {
+                songs.add(songDir + files.get(i));
+                System.out.println(songs.get(i));
+            }
+
+            playSong = PlaySong.newInstance(songs.get(0));
+            if (playSong == null) System.out.println("playSong is null");
+            songIndex++;
+        } else { // playing song
+            playSong = PlaySong.newInstance(file);
+        }
+
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container, playSong, "play_song");
-        fragmentTransaction.remove(selectSong);
+
+        if (reason == 0) fragmentTransaction.remove(selectSetlist);
+        else fragmentTransaction.remove(selectSong);
+
         fragmentTransaction.commit();
     }
 
@@ -109,7 +157,21 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     @Override
     public void onFragmentInteraction() {
         if (reason == 0) {
+            if (songIndex < songs.size()) { // load next song if there is another in the setlist
+                String filePath = getApplicationInfo().dataDir + "/songs/";
+                PlaySong newSong = PlaySong.newInstance(filePath + songs.get(songIndex));
+                songIndex++;
 
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, newSong, "play_song");
+                fragmentTransaction.remove(playSong);
+                fragmentTransaction.commit();
+
+                playSong = newSong;
+            } else { // setlist is done
+                retrieveEvent.cancel(true);
+                finish();
+            }
         } else {
             retrieveEvent.cancel(true);
             finish();

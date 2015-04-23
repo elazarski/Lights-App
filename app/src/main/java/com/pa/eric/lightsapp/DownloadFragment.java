@@ -94,12 +94,6 @@ public class DownloadFragment extends ListFragment {
         return v;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -138,10 +132,16 @@ public class DownloadFragment extends ListFragment {
         for (int i = 0; i < strings.size(); i++) {
 
             String line = strings.get(i);
-            // extract required part of string and add to songList
-            int beginIndex = line.indexOf("f=") + 3;
-            int endIndex = line.indexOf(".xml");
+            int beginIndex, endIndex;
 
+            if (reason == 2) { // setlist
+                beginIndex = line.indexOf("f=") + 3;
+                endIndex = line.indexOf(".txt");
+            } else {
+                // extract required part of string and add to songList
+                beginIndex = line.indexOf("f=") + 3;
+                endIndex = line.indexOf(".xml");
+            }
             songList.add(line.substring(beginIndex, endIndex));
         }
 
@@ -153,8 +153,12 @@ public class DownloadFragment extends ListFragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String filePath = path + (String)(lv.getItemAtPosition(position)) + ".xml";
+                String filePath = path + (String)(lv.getItemAtPosition(position));
                 String selectedFromList = (String)(lv.getItemAtPosition(position));
+
+                if (reason == 2) filePath = filePath + ".txt"; // setlist
+                else filePath = filePath + ".xml"; // song
+
                 new DownloadFile().execute(filePath, selectedFromList);
             }
         });
@@ -190,7 +194,7 @@ public class DownloadFragment extends ListFragment {
                 while (line != null) {
 
                     // check if current line is needed
-                    if (line.contains("<tr><td") && !(line.contains("[PARENTDIR]"))) requiredLines.add(line);
+                    if (line.contains(".xml") || line.contains(".txt")) requiredLines.add(line);
 
                     line = bufferedReader.readLine();
                 }
@@ -217,13 +221,15 @@ public class DownloadFragment extends ListFragment {
         protected File doInBackground(String... params) {
 
             // get filename
-            String fileName = params[1] + ".xml";
+            String fileName = params[1];
+            if (reason == 2) fileName = fileName + ".txt";
+            else fileName = fileName + ".xml";
             String filePath = getActivity().getApplicationContext().getApplicationInfo().dataDir;
+
             if (params[0].contains("set")) filePath = filePath + "/setlists/";
             else filePath = filePath + "/songs/";
 
             // code found at: http://stackoverflow.com/questions/15758856/android-how-to-download-file-from-webserver
-
             try {
 
                 URL url = new URL(params[0]);
@@ -266,4 +272,6 @@ public class DownloadFragment extends ListFragment {
             Toast.makeText(getActivity().getApplicationContext(), "File Downloaded", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

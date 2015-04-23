@@ -101,7 +101,7 @@ public class TCPClient {
                 Log.d(TAG, "Closed");
             }
         } catch (Exception e) {
-            Log.d(TAG, "Error", e);
+            Log.e("Error: ", e.toString());
         }
     }
 

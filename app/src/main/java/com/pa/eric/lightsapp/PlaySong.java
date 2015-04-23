@@ -81,6 +81,8 @@ public class PlaySong extends Fragment {
             filePath = getArguments().getString(FILEPATH);
         }
 
+        System.out.println(filePath);
+
         // load song
         // We don't use namespaces
         String ns = null;
