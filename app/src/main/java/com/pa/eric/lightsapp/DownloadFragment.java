@@ -244,12 +244,12 @@ public class DownloadFragment extends ListFragment {
                 if (f.exists()) f.delete();
                 OutputStream output = new FileOutputStream(filePath + fileName, true);
 
-                byte data[] = new byte[1024];
+                byte data[] = new byte[4];
 
                 while (input.read(data) != -1) {
                     output.write(data);
 
-                    data = new byte[1024];
+                    data = new byte[4];
                 }
 
                 output.flush();

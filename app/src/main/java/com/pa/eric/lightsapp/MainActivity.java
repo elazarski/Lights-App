@@ -113,6 +113,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             // delete setlist data
+            Intent intent = new Intent(MainActivity.this, DeleteActivity.class);
+            intent.putExtra("reason", 4);
+            startActivity(intent);
         }
     }
 
@@ -120,6 +123,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             // delete song data
+            Intent intent = new Intent(MainActivity.this, DeleteActivity.class);
+            intent.putExtra("reason", 5);
+            startActivity(intent);
         }
     }
 }

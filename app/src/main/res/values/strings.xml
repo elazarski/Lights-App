@@ -22,4 +22,5 @@
     <string name="mood">Mood</string>
     <string name="next_button">Next Cue</string>
     <string name="cue_list">Cue List</string>
+    <string name="title_activity_delete">DeleteActivity</string>
 </resources>

@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -119,22 +121,22 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
 
             String songDir = getApplicationInfo().dataDir + "/songs/";
 
-            // get songs from setlist
-            ArrayList<String> files = new ArrayList<>();
             try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String line;
 
-                while ((line = br.readLine()) != null) {
-                    files.add(line);
+                File f = new File(file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+                String line = br.readLine();
+
+                while (line != null) {
+                    System.out.println(line);
+                    songs.add(line);
+                    line = br.readLine();
                 }
+                br.close();
+
+
             } catch (Exception e) {
                 Log.e("ERROR: ", e.toString());
-            }
-
-            for (int i = 0; i < files.size(); i++) {
-                songs.add(songDir + files.get(i));
-                System.out.println(songs.get(i));
             }
 
             playSong = PlaySong.newInstance(songs.get(0));
