@@ -8,16 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.BufferedReader;
-import java.io.File;
+import org.xmlpull.v1.XmlPullParser;
+
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -119,27 +120,36 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     public void onFragmentInteraction(String file) {
         if (reason == 0) { //playing setlist
 
-            String songDir = getApplicationInfo().dataDir + "/songs/";
-
+            // parse XML
             try {
+                // We don't use namespaces
+                String ns = null;
 
-                File f = new File(file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-                String line = br.readLine();
+                BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
 
-                while (line != null) {
-                    System.out.println(line);
-                    songs.add(line);
-                    line = br.readLine();
+                // code found at: http://developer.android.com/training/basics/network-ops/xml.html
+                XmlPullParser pullParser = Xml.newPullParser();
+                pullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                pullParser.setInput(in, "ASCII");
+                pullParser.nextTag();
+
+                pullParser.require(XmlPullParser.START_TAG, ns, "setlist");
+
+                while (pullParser.next() != XmlPullParser.END_DOCUMENT) {
+                    if (pullParser.getEventType() != XmlPullParser.START_TAG) continue;
+
+                    String nodeName = pullParser.getName();
+                    if (nodeName.equals("song")) songs.add(pullParser.nextText());
                 }
-                br.close();
 
+                for (int i = 0; i < songs.size(); i++) System.out.println(songs.get(i));
 
+                in.close();
             } catch (Exception e) {
                 Log.e("ERROR: ", e.toString());
             }
 
-            playSong = PlaySong.newInstance(songs.get(0));
+            playSong = PlaySong.newInstance(getApplicationInfo().dataDir + "/songs/" +   songs.get(0));
             if (playSong == null) System.out.println("playSong is null");
             songIndex++;
         } else { // playing song
@@ -158,7 +168,7 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
     // called when song is done
     @Override
     public void onFragmentInteraction() {
-        if (reason == 0) {
+        if (reason == 0) { // playing setlist
             if (songIndex < songs.size()) { // load next song if there is another in the setlist
                 String filePath = getApplicationInfo().dataDir + "/songs/";
                 PlaySong newSong = PlaySong.newInstance(filePath + songs.get(songIndex));
@@ -174,7 +184,7 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
                 retrieveEvent.cancel(true);
                 finish();
             }
-        } else {
+        } else { // song is done
             retrieveEvent.cancel(true);
             finish();
         }

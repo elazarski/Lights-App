@@ -67,7 +67,7 @@ public class SelectSetlist extends ListFragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String pathToFile = getActivity().getApplicationInfo().dataDir + "/setlists/" + (String)lv.getItemAtPosition(position) + ".txt";
+                String pathToFile = getActivity().getApplicationInfo().dataDir + "/setlists/" + (String)lv.getItemAtPosition(position) + ".xml";
                 mListener.onFragmentInteraction(pathToFile);
             }
         });

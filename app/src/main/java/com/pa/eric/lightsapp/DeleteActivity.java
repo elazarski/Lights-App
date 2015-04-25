@@ -23,6 +23,8 @@ public class DeleteActivity extends ListActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        files = new ArrayList<>();
+
         setContentView(R.layout.activity_delete);
 
         path = getApplicationInfo().dataDir;
@@ -35,9 +37,17 @@ public class DeleteActivity extends ListActivity {
         if (reason == 4) path = path + "/setlists/";
         else path = path + "/songs/";
 
-        File f[] = new File(path).listFiles();
+        File file = new File(path);
+        File f[] = file.listFiles();
         for (int i = 0; i < f.length; i++) {
-            files.add(f[i].toString());
+            String currentFile = f[i].toString();
+            int beginIndex = 0;
+            int endIndex = currentFile.indexOf(".xml");
+
+            if (reason == 4) beginIndex = currentFile.indexOf("setlists/") + 9;
+            else beginIndex = currentFile.indexOf("songs/") + 6;
+
+            files.add(currentFile.substring(beginIndex, endIndex));
         }
 
         adapter = new ArrayAdapter<String>(this, R.layout.row, files);
@@ -48,8 +58,9 @@ public class DeleteActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        File f = new File(path + lv.getItemAtPosition(position));
+        File f = new File(path + lv.getItemAtPosition(position) + ".xml");
         f.delete();
+        finish();
     }
 
     @Override

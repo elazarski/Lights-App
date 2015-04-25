@@ -134,14 +134,10 @@ public class DownloadFragment extends ListFragment {
             String line = strings.get(i);
             int beginIndex, endIndex;
 
-            if (reason == 2) { // setlist
-                beginIndex = line.indexOf("f=") + 3;
-                endIndex = line.indexOf(".txt");
-            } else {
                 // extract required part of string and add to songList
                 beginIndex = line.indexOf("f=") + 3;
                 endIndex = line.indexOf(".xml");
-            }
+
             songList.add(line.substring(beginIndex, endIndex));
         }
 
@@ -156,8 +152,7 @@ public class DownloadFragment extends ListFragment {
                 String filePath = path + (String)(lv.getItemAtPosition(position));
                 String selectedFromList = (String)(lv.getItemAtPosition(position));
 
-                if (reason == 2) filePath = filePath + ".txt"; // setlist
-                else filePath = filePath + ".xml"; // song
+                filePath = filePath + ".xml";
 
                 new DownloadFile().execute(filePath, selectedFromList);
             }
@@ -194,7 +189,7 @@ public class DownloadFragment extends ListFragment {
                 while (line != null) {
 
                     // check if current line is needed
-                    if (line.contains(".xml") || line.contains(".txt")) requiredLines.add(line);
+                    if (line.contains(".xml")) requiredLines.add(line);
 
                     line = bufferedReader.readLine();
                 }
@@ -222,8 +217,7 @@ public class DownloadFragment extends ListFragment {
 
             // get filename
             String fileName = params[1];
-            if (reason == 2) fileName = fileName + ".txt";
-            else fileName = fileName + ".xml";
+            fileName = fileName + ".xml";
             String filePath = getActivity().getApplicationContext().getApplicationInfo().dataDir;
 
             if (params[0].contains("set")) filePath = filePath + "/setlists/";
