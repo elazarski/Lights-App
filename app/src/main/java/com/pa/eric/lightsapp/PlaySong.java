@@ -152,6 +152,8 @@ public class PlaySong extends Fragment {
         cueList.setText(song.getFirstCue().toString());
 
         cueList.setMovementMethod(new ScrollingMovementMethod());
+
+
     }
 
     @Override

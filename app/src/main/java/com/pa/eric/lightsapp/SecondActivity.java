@@ -1,11 +1,14 @@
 package com.pa.eric.lightsapp;
 
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.Xml;
@@ -14,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -70,16 +74,30 @@ public class SecondActivity extends ActionBarActivity implements GotIp,DownloadF
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        switch (id) {
+            case R.id.default_ip: // save IP/HostName to file to be loaded by default
+                EditText ipEditText = (EditText)findViewById(R.id.ipEditText);
+                String ip = ipEditText.getText().toString();
 
-        return super.onOptionsItemSelected(item);
+                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("IP", ip);
+                editor.commit();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // continues after getting the IP/Hostname of server based upon the reason this Activity was launched
     public void cont(String ipAddr) {
+
+        // hide actionBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         // connect to specified IP Address
         if (reason == 0 || reason == 1) { // playing setlist or song
 

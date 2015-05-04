@@ -16,11 +16,12 @@
     <string name="no_files">No Files</string>
     <string name="song_name">Song Name</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="bpm">BPM</string>
     <string name="mood">Mood</string>
     <string name="next_button">Next Cue</string>
     <string name="cue_list">Cue List</string>
     <string name="title_activity_delete">DeleteActivity</string>
+    <string name="default_host">Set Default IP/Host</string>
+
 </resources>

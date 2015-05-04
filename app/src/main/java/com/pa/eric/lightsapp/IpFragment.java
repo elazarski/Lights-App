@@ -1,6 +1,8 @@
 package com.pa.eric.lightsapp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,9 @@ public class IpFragment extends Fragment {
         ipEditText = (EditText)getActivity().findViewById(R.id.ipEditText);
 
         accept.setOnClickListener(new AcceptListener());
+
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        ipEditText.setText(sharedPreferences.getString("IP", null));
     }
 
     @Override
