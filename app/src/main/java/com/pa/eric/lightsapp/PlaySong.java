@@ -11,7 +11,6 @@ import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -46,7 +45,6 @@ public class PlaySong extends Fragment {
     TextView bpm;
     TextView mood;
     private static TextView cueList;
-    Button nextCue;
 
     public static Queue<MidiEvent> queue = new LinkedList<MidiEvent>();
 
@@ -143,7 +141,7 @@ public class PlaySong extends Fragment {
         bpm = (TextView)getActivity().findViewById(R.id.bpmTextView);
         mood = (TextView)getActivity().findViewById(R.id.moodTextView);
         cueList = (TextView)getActivity().findViewById(R.id.cueListTextView);
-        nextCue = (Button)getActivity().findViewById(R.id.nextButton);
+
 
         songName.setText(song.getName());
         bpm.setText("BPM: " + Integer.toString(song.getBpm()));
